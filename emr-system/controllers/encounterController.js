@@ -1,11 +1,26 @@
-const Encounter = require("../models/encounter");
+// controllers/encounterController.js
+const Encounter = require('../models/encounter');
 
-exports.startEncounter = async (req, res) => {
-  try {
-    const encounter = new Encounter(req.body);
-    await encounter.save();
-    res.status(201).json(encounter);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+module.exports = {
+  startEncounter: async (req, res) => {
+    try {
+      // Extract encounter information from the request body
+      const { patientID, type, vitals } = req.body;
+
+      // Create a new encounter record in the database
+      const newEncounter = await Encounter.create({
+        patientID,
+        type,
+        vitals,
+      });
+
+      // Respond with the newly created encounter data
+      res.status(201).json(newEncounter);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+
 };
